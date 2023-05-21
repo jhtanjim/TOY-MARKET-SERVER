@@ -74,6 +74,13 @@ async function run() {
         });
         // update
 
+        app.get('/alltoy/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await toyCollection.findOne(query);
+            res.send(result);
+        });
+
 
 
         // });
@@ -83,14 +90,14 @@ async function run() {
 
 
 
-        app.get('/toy/:id', async (req, res) => {
+        app.get('/toyCategory/:id', async (req, res) => {
             // console.log(req.params.id);
             const id = req.params.id
 
             const query = { _id: new ObjectId(id) };
 
 
-            const cursor = await toyCollection.findOne(query);
+            const cursor = await categoryCollection.findOne(query);
             console.log(cursor);
             res.send(cursor);
         });
@@ -152,9 +159,9 @@ run().catch(console.dir);
 
 
 
-app.get('/', (req, res) => {
-    res.send('Toy store server running')
-})
+// app.get('/', (req, res) => {
+//     res.send('Toy store server running')
+// })
 
 
 app.listen(port, () => {
