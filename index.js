@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.json())
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.khwex9e.mongodb.net/?retryWrites=true&w=majority`;
 
 
@@ -38,7 +38,7 @@ async function run() {
 
         // receive data from client by newToy
         // create
-        app.post('/toy', async (req, res) => {
+        app.post('/addtoy', async (req, res) => {
 
             const newToy = req.body
             console.log(newToy);
@@ -46,20 +46,66 @@ async function run() {
             res.send(result)
         })
         // Read
-        app.get('/toy', async (req, res) => {
-            const cursor = toyCollection.find()
-            const result = await cursor.toArray()
-            res.send(result)
-        })
         app.get('/toyCategory', async (req, res) => {
             const cursor = categoryCollection.find()
             const result = await cursor.toArray()
             res.send(result)
         })
 
+        app.get('/alltoy', async (req, res) => {
+
+            const cursor = toyCollection.find()
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
+        // specific user data
+        app.get('/alltoy/:email', async (req, res) => {
+            // console.log(req.params.email);
+
+            let query = {};
+            if (req.params.email) {
+                query = { email: req.params.email };
+            }
+
+            const cursor = toyCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        });
+
+
+        app.get('/toy/:id', async (req, res) => {
+            // console.log(req.params.id);
+            const id = req.params.id
+
+            const query = { _id: new ObjectId(id) };
+
+
+            const cursor = await toyCollection.findOne(query);
+            console.log(cursor);
+            res.send(cursor);
+        });
+
+        app.delete('/alltoy/:id', async (req, res) => {
+            const id = req.params.id
+            console.log('please delete this from db', id);
+            const query = { _id: new ObjectId(id) }
+            const result = await toyCollection.deleteOne(query)
+            res.send(result)
+        })
 
 
 
+
+
+        // app.get('/toys/:id', async (req, res) => {
+
+        //     const id = req.params.id
+        //     const query = { _id: new ObjectId(id) }
+        //     const result = await toyCollection.findOne(query)
+
+        //     res.send(result)
+        // })
 
 
 
