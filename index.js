@@ -72,6 +72,15 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result);
         });
+        // update
+
+
+
+        // });
+
+
+
+
 
 
         app.get('/toy/:id', async (req, res) => {
@@ -85,6 +94,14 @@ async function run() {
             console.log(cursor);
             res.send(cursor);
         });
+
+
+
+
+
+
+
+
 
         app.delete('/alltoy/:id', async (req, res) => {
             const id = req.params.id
