@@ -68,16 +68,14 @@ async function run() {
         })
 
 
-        app.get('/alltoy/:email', async (req, res) => {
+        app.get('/alltoydata/:email', async (req, res) => {
             // console.log(req.params.email);
 
-            let query = {};
-            if (req.params.email) {
-                query = { email: req.params.email };
-            }
+            const query = { email: req.params.email }
 
             const cursor = toyCollection.find(query);
             const result = await cursor.toArray();
+            console.log(result);
             res.send(result);
         });
 
