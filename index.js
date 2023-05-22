@@ -38,13 +38,7 @@ async function run() {
 
         // receive data from client by newToy
         // create
-        app.post('/addtoy', async (req, res) => {
 
-            const newToy = req.body
-            console.log(newToy);
-            const result = await toyCollection.insertOne(newToy)
-            res.send(result)
-        })
         // Read
         app.get('/toyCategory', async (req, res) => {
             const cursor = categoryCollection.find()
@@ -59,7 +53,21 @@ async function run() {
             res.send(result)
         })
 
+
+
+
         // specific user data
+        app.get('/alltoy/:id', async (req, res) => {
+            const id = req.params.id
+            console.log(id);
+            //return
+            const query = { _id: new ObjectId(id) }
+            const result = await toyCollection.findOne(query)
+            console.log(result);
+            res.send(result)
+        })
+
+
         app.get('/alltoy/:email', async (req, res) => {
             // console.log(req.params.email);
 
@@ -72,18 +80,22 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result);
         });
+
         // update
+        app.put('/alltoy/:id', async (req, res) => {
 
-        app.get('/alltoy/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: new ObjectId(id) };
-            const result = await toyCollection.findOne(query);
-            res.send(result);
-        });
-
-
-
-        // });
+            const id = req.params.id
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true }
+            const updatedToy = req.body
+            const coffee = {
+                $set: {
+                    name: updatedToy.name, quantity: updatedToy.quantity, category: updatedToy.category, details: updatedToy.details, photo: updatedToy.photo
+                }
+            }
+            const result = await toyCollection.updateOne(filter, coffee, options)
+            res.send(result)
+        })
 
 
 
@@ -106,7 +118,20 @@ async function run() {
 
 
 
+        app.post('/addtoy', async (req, res) => {
 
+            const newToy = req.body
+            console.log(newToy);
+            const result = await toyCollection.insertOne(newToy)
+            res.send(result)
+        })
+        app.get('/alltoy/:id', async (req, res) => {
+            const id = req.params.id
+            console.log('please delete this from db', id);
+            const query = { _id: new ObjectId(id) }
+            const result = await toyCollection.findOne(query)
+            res.send(result)
+        })
 
 
 
@@ -122,14 +147,6 @@ async function run() {
 
 
 
-        // app.get('/toys/:id', async (req, res) => {
-
-        //     const id = req.params.id
-        //     const query = { _id: new ObjectId(id) }
-        //     const result = await toyCollection.findOne(query)
-
-        //     res.send(result)
-        // })
 
 
 
